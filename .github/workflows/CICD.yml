@@ -38,7 +38,13 @@ jobs:
       url: 'http://test.myapp.com'
     steps:
       - name: Deploy
-        run: echo I am deploying! 
+        run: echo I am deploying!
+      - name: Send notifications to telegram in run multi-line script
+        env:
+          TELEGRAM_ID_OR_CHANNEL: ${{ secrets.TELEGRAM_ID_OR_CHANNEL }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+        run: |
+          curl --data parse_mode=HTML --data chat_id=${TELEGRAM_ID_OR_CHANNEL} --data text="<b>GitHub Notifications</b>%0AThe Staging environment it's OK! and require the aproval for $GITHUB_ACTOR to deploy in Prod" --request POST https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage
             
   DeployProd:
     name: Deploy to Production 
@@ -49,5 +55,10 @@ jobs:
       url: 'http://www.myapp.com'
     steps:
       - name: Deploy
-        run: echo I am deploying! 
-    
+        run: echo I am deploying!
+      - name: Send notifications to telegram in run multi-line script
+        env:
+          TELEGRAM_ID_OR_CHANNEL: ${{ secrets.TELEGRAM_ID_OR_CHANNEL }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+        run: |
+          curl --data parse_mode=HTML --data chat_id=${TELEGRAM_ID_OR_CHANNEL} --data text="<b>GitHub Notifications</b>%0AThe Prod environment it was deployed" --request POST https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage
